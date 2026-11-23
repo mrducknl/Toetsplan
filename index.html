@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToetsPlan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <span>ToetsPlan</span>
+      </div>
+
+      <nav class="nav" aria-label="Hoofdmenu">
+        <button class="nav-item active" data-view="dashboard" aria-label="Overzicht" aria-current="page">
+          <span class="nav-icon">⌂</span><span>Overzicht</span>
+        </button>
+        <button class="nav-item" data-view="calendar" aria-label="Agenda">
+          <span class="nav-icon">▦</span><span>Agenda</span>
+        </button>
+        <button class="nav-item" data-view="subjects" aria-label="Vakken">
+          <span class="nav-icon">▤</span><span>Vakken</span>
+        </button>
+        <button class="nav-item" data-view="settings" aria-label="Instellingen">
+          <span class="nav-icon">⚙</span><span>Instellingen</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="profile" id="profileButton" aria-label="Jouw profiel">
+          <span class="avatar" id="avatarInitial">J</span>
+          <span class="profile-copy">
+            <strong id="profileName">Jouw profiel</strong>
+            <small>Leerling</small>
+          </span>
+          <span>•••</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel"></p>
+          <h1 id="pageTitle">Overzicht</h1>
+        </div>
+        <div class="top-actions">
+          <button class="assistant-button" id="assistantButton" aria-label="AI plannen"><span>✦</span> AI plannen</button>
+          <button class="icon-button" id="shareButton" title="Plannen delen" aria-label="Plannen delen">↗</button>
+          <button class="primary-button" id="addExamButton"><span>＋</span> Nieuwe toets</button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboardView">
+        <div class="summary-grid">
+          <article class="summary-card">
+            <div class="summary-icon blue">▦</div>
+            <div><strong id="upcomingCount">0</strong><span>Aankomende toetsen</span></div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-icon coral">✓</div>
+            <div><strong id="completedCount">0</strong><span>Afgeronde taken</span></div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-icon green">◷</div>
+            <div><strong id="weekCount">0</strong><span>Toetsen deze week</span></div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel exam-panel">
+            <div class="panel-header">
+              <h2>Komende toetsen</h2>
+              <button class="text-button" data-go="calendar">Agenda bekijken</button>
+            </div>
+            <div id="examList" class="exam-list"></div>
+          </article>
+
+          <article class="panel tasks-panel">
+            <div class="panel-header dashboard-day-header">
+              <div>
+                <h2>Dagrooster</h2>
+                <span class="dashboard-date-button" id="dashboardDateButton"></span>
+              </div>
+              <div class="dashboard-day-controls">
+                <button class="icon-button small" id="dashboardPrevDay" aria-label="Vorige dag">‹</button>
+                <button class="text-button" id="dashboardTodayButton">Vandaag</button>
+                <button class="icon-button small" id="dashboardNextDay" aria-label="Volgende dag">›</button>
+                <button class="icon-button small" id="addTaskButton" aria-label="Taak toevoegen" title="Taak toevoegen">＋</button>
+              </div>
+            </div>
+            <div id="taskList" class="dashboard-day-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="calendarView">
+        <article class="panel calendar-panel">
+          <div class="calendar-toolbar">
+            <div class="calendar-week-navigation">
+              <button class="icon-button small calendar-nav-button" id="prevMonth" aria-label="Vorige week">‹</button>
+              <div class="calendar-week-title">
+                <span>WEEKOVERZICHT</span>
+                <h2 id="monthTitle"></h2>
+              </div>
+              <button class="icon-button small calendar-nav-button" id="nextMonth" aria-label="Volgende week">›</button>
+              <button class="text-button today-button" id="todayButton">Vandaag</button>
+            </div>
+            <div class="calendar-toolbar-actions">
+              <button type="button" class="primary-button" id="addTaskCalendarButton">＋ Taak toevoegen</button>
+              <button type="button" class="text-button" id="manageWeeklyScheduleCalendarButton">Weekrooster instellen</button>
+            </div>
+          </div>
+          <div class="week-agenda" id="calendarGrid"></div>
+        </article>
+      </section>
+
+      <section class="view" id="subjectsView">
+        <div class="section-toolbar">
+          <h2>Mijn vakken</h2>
+          <button class="primary-button" id="addSubjectButton">＋ Vak toevoegen</button>
+        </div>
+        <div class="subject-grid" id="subjectGrid"></div>
+      </section>
+
+      <section class="view" id="settingsView">
+        <div class="settings-intro">
+          <h2>Jouw instellingen</h2>
+          <p>Pas je profiel en weekplanning aan. Zo houdt ToetsPlan rekening met jouw schoolweek.</p>
+        </div>
+        <div class="settings-grid">
+          <article class="panel settings-card">
+            <div class="settings-icon">P</div>
+            <div><span>Profiel</span><strong id="settingsProfileName">Jouw profiel</strong></div>
+            <button class="secondary-button" id="openProfileSettingsButton">Bewerken</button>
+          </article>
+          <article class="panel settings-card">
+            <div class="settings-icon">▦</div>
+            <div><span>Weekrooster</span><strong>Schooldagen en afspraken</strong></div>
+            <button class="secondary-button" id="openScheduleSettingsButton">Bewerken</button>
+          </article>
+          <article class="panel settings-card">
+            <div class="settings-icon">◷</div>
+            <div><span>Wakkertijden</span><strong id="settingsStudyWindow">07:00–22:00</strong></div>
+            <button class="secondary-button" id="openStudyWindowSettingsButton">Bewerken</button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="examDialog" aria-labelledby="examDialogTitle">
+      <form method="dialog" id="examForm">
+        <div class="dialog-header"><h2 id="examDialogTitle">Nieuwe toets</h2><button type="button" class="close-button close-dialog" data-dialog="examDialog" aria-label="Sluiten">×</button></div>
+        <input type="hidden" id="examId" />
+        <label>Vak <select id="examSubject" required></select></label>
+        <label>Onderwerp <input id="examTitle" required placeholder="Bijv. Hoofdstuk 3" /></label>
+        <div class="form-row">
+          <label>Datum <input type="date" id="examDate" required /></label>
+          <label>Starttijd <input type="text" id="examTime" class="time-24-input" value="09:00" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" placeholder="09:00" /></label>
+        </div>
+        <label>Studeertijd (uren) <input type="number" id="examHours" min="1" max="40" value="4" /></label>
+        <div class="dialog-actions">
+          <button type="button" class="danger-button" id="deleteExamButton" hidden>Verwijderen</button>
+          <button type="button" class="secondary-button cancel-dialog" data-dialog="examDialog">Annuleren</button>
+          <button type="submit" class="primary-button">Opslaan</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="taskDialog" aria-labelledby="taskDialogTitle">
+      <form method="dialog" id="taskForm">
+        <div class="dialog-header"><h2 id="taskDialogTitle">Nieuwe taak</h2><button type="button" class="close-button close-dialog" data-dialog="taskDialog" aria-label="Sluiten">×</button></div>
+        <input type="hidden" id="taskId" />
+        <label>Taak <input id="taskTitle" required placeholder="Wat moet je doen?" /></label>
+        <label>Vak <select id="taskSubject"></select></label>
+        <label>Datum <input type="date" id="taskDate" required /></label>
+        <div class="form-row">
+          <label>Begintijd <input type="text" id="taskTime" class="time-24-input" value="16:00" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" placeholder="16:00" required /></label>
+          <label>Duur (uren) <input type="number" id="taskHours" min="0.5" max="8" step="0.5" value="1" required /></label>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="danger-button" id="deleteTaskButton" hidden>Verwijderen</button>
+          <button type="button" class="secondary-button cancel-dialog" data-dialog="taskDialog">Annuleren</button>
+          <button type="submit" class="primary-button">Opslaan</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="subjectDialog" aria-labelledby="subjectDialogTitle">
+      <form method="dialog" id="subjectForm">
+        <div class="dialog-header"><h2 id="subjectDialogTitle">Vak toevoegen</h2><button type="button" class="close-button close-dialog" data-dialog="subjectDialog" aria-label="Sluiten">×</button></div>
+        <label>Naam <input id="subjectName" required placeholder="Bijv. Geschiedenis" /></label>
+        <label>Kleur
+          <div class="color-row" id="colorRow">
+            <button type="button" class="color-option selected" data-color="#6c63ff" aria-label="Paars" aria-pressed="true" style="--color:#6c63ff"></button>
+            <button type="button" class="color-option" data-color="#ff8b74" aria-label="Koraal" aria-pressed="false" style="--color:#ff8b74"></button>
+            <button type="button" class="color-option" data-color="#35b995" aria-label="Groen" aria-pressed="false" style="--color:#35b995"></button>
+            <button type="button" class="color-option" data-color="#e7b84b" aria-label="Geel" aria-pressed="false" style="--color:#e7b84b"></button>
+            <button type="button" class="color-option" data-color="#5796db" aria-label="Blauw" aria-pressed="false" style="--color:#5796db"></button>
+          </div>
+        </label>
+        <div class="dialog-actions">
+          <button type="button" class="secondary-button cancel-dialog" data-dialog="subjectDialog">Annuleren</button>
+          <button type="submit" class="primary-button">Opslaan</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="subjectDetailDialog" aria-labelledby="subjectDetailTitle">
+      <div class="subject-detail-content">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Vakdetails</p>
+            <h2 id="subjectDetailTitle"></h2>
+          </div>
+          <button type="button" class="close-button close-dialog" data-dialog="subjectDetailDialog" aria-label="Sluiten">×</button>
+        </div>
+        <section class="subject-detail-section">
+          <div class="subject-detail-heading">
+            <h3>Toetsen</h3>
+            <button type="button" class="text-button" id="subjectAddExamButton">＋ Toets</button>
+          </div>
+          <div id="subjectExamList" class="subject-detail-list"></div>
+        </section>
+        <section class="subject-detail-section">
+          <div class="subject-detail-heading">
+            <h3>Aantekeningen</h3>
+            <button type="button" class="text-button" id="subjectAddNoteButton">＋ Aantekening</button>
+          </div>
+          <div id="subjectNoteList" class="subject-detail-list"></div>
+        </section>
+      </div>
+    </dialog>
+
+    <dialog id="noteDialog" aria-labelledby="noteDialogTitle">
+      <form method="dialog" id="noteForm">
+        <div class="dialog-header"><h2 id="noteDialogTitle">Nieuwe notitie</h2><button type="button" class="close-button close-dialog" data-dialog="noteDialog" aria-label="Sluiten">×</button></div>
+        <input type="hidden" id="noteId" />
+        <label>Vak <select id="noteSubject"></select></label>
+        <label>Titel <input id="noteTitle" required placeholder="Notitie titel" /></label>
+        <label>Tekst <textarea id="noteText" rows="7" placeholder="Schrijf hier je notitie..."></textarea></label>
+        <div class="dialog-actions">
+          <button type="button" class="danger-button" id="deleteNoteButton" hidden>Verwijderen</button>
+          <button type="button" class="secondary-button cancel-dialog" data-dialog="noteDialog">Annuleren</button>
+          <button type="submit" class="primary-button">Opslaan</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="profileDialog" aria-labelledby="profileDialogTitle">
+      <form method="dialog" id="profileForm">
+        <div class="dialog-header"><h2 id="profileDialogTitle">Profiel aanpassen</h2><button type="button" class="close-button close-dialog" data-dialog="profileDialog" aria-label="Sluiten">×</button></div>
+        <label>Naam <input id="profileNameInput" required placeholder="Je naam" /></label>
+        <div class="dialog-actions">
+          <button type="button" class="secondary-button cancel-dialog" data-dialog="profileDialog">Annuleren</button>
+          <button type="submit" class="primary-button">Opslaan</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="weeklyScheduleDialog" aria-labelledby="weeklyScheduleTitle">
+      <div class="weekly-schedule-content">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Beschikbaarheid</p>
+            <h2 id="weeklyScheduleTitle">Weekrooster</h2>
+          </div>
+          <button type="button" class="close-button close-dialog" data-dialog="weeklyScheduleDialog" aria-label="Sluiten">×</button>
+        </div>
+        <p class="dialog-copy">De planner houdt rekening met school, afspraken en je wakkertijden. Als je dit rooster wijzigt, verschuift ToetsPlan je open leermomenten waar mogelijk mee.</p>
+        <div class="weekly-step-label" id="weeklyStepLabel">Stap 1 van 3</div>
+        <section class="weekly-step" id="weeklyStep1">
+          <h3>1. Hoe lang heb je school op elke dag?</h3>
+          <p class="weekly-step-copy">Vink je schooldagen aan en vul begin- en eindtijd in de 24-uursnotatie in.</p>
+          <div id="schoolScheduleQuestions" class="school-schedule-questions"></div>
+          <div class="weekly-wizard-actions">
+            <button type="button" class="primary-button" id="weeklyNextToActivities">Volgende</button>
+          </div>
+        </section>
+        <section class="weekly-step" id="weeklyStep2" hidden>
+          <h3>2. Heb je nog andere vaste afspraken?</h3>
+          <p class="weekly-step-copy">Voeg bijvoorbeeld sport, muziekles of reistijd toe. De planner slaat deze tijden over.</p>
+          <label>Activiteit <input id="weeklyActivityName" placeholder="Bijv. voetbal" /></label>
+          <fieldset class="weekday-picker">
+            <legend>Op welke dagen?</legend>
+            <div class="weekday-options">
+              <label><input type="checkbox" name="weeklyActivityDay" value="0" /> Ma</label>
+              <label><input type="checkbox" name="weeklyActivityDay" value="1" /> Di</label>
+              <label><input type="checkbox" name="weeklyActivityDay" value="2" /> Wo</label>
+              <label><input type="checkbox" name="weeklyActivityDay" value="3" /> Do</label>
+              <label><input type="checkbox" name="weeklyActivityDay" value="4" /> Vr</label>
+              <label><input type="checkbox" name="weeklyActivityDay" value="5" /> Za</label>
+              <label><input type="checkbox" name="weeklyActivityDay" value="6" /> Zo</label>
+            </div>
+          </fieldset>
+          <div class="form-row">
+            <label>Van <input type="text" id="weeklyActivityStart" class="time-24-input" value="16:00" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" placeholder="16:00" /></label>
+            <label>Tot <input type="text" id="weeklyActivityEnd" class="time-24-input" value="18:00" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" placeholder="18:00" /></label>
+          </div>
+          <div class="weekly-form-actions">
+            <button type="button" class="secondary-button" id="addWeeklyActivityButton">Afspraak toevoegen</button>
+          </div>
+          <div id="weeklyActivityList" class="weekly-activity-list"></div>
+          <div class="weekly-wizard-actions">
+            <button type="button" class="secondary-button" id="weeklyBackToSchool">Terug</button>
+            <button type="button" class="primary-button" id="weeklyNextToStudyWindow">Volgende</button>
+          </div>
+        </section>
+        <section class="weekly-step" id="weeklyStep3" hidden>
+          <h3>3. Hoe laat sta je op en ga je slapen?</h3>
+          <p class="weekly-step-copy">ToetsPlan plant leermomenten binnen je wakkere uren, om school en afspraken heen.</p>
+          <div class="form-row">
+            <label>Ik sta op om <input type="time" id="studyWindowStart" value="07:00" step="60" /></label>
+            <label>Ik ga slapen om <input type="time" id="studyWindowEnd" value="22:00" step="60" /></label>
+          </div>
+          <div class="study-approach-group">
+            <p class="study-approach-help"><strong>Leeraanpak</strong><br />AI plant per onderwerp twee leermomenten en één aparte herhaling.</p>
+          </div>
+          <div class="weekly-wizard-actions">
+            <button type="button" class="secondary-button" id="weeklyBackToActivities">Terug</button>
+            <button type="button" class="primary-button" id="saveWeeklyScheduleButton">Weekrooster opslaan</button>
+          </div>
+        </section>
+      </div>
+    </dialog>
+
+    <dialog id="dayDialog" aria-labelledby="dayDialogTitle">
+      <div class="day-dialog-content">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Dagrooster</p>
+            <h2 id="dayDialogTitle"></h2>
+          </div>
+          <button type="button" class="close-button close-dialog" data-dialog="dayDialog" aria-label="Sluiten">×</button>
+        </div>
+        <div id="dayScheduleList" class="day-schedule-list"></div>
+        <div class="day-dialog-actions">
+          <button type="button" class="secondary-button" id="dayAddTaskButton">＋ Taak toevoegen</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="shareDialog" aria-labelledby="shareDialogTitle">
+      <form method="dialog">
+        <div class="dialog-header"><h2 id="shareDialogTitle">Planning delen</h2><button type="button" class="close-button close-dialog" data-dialog="shareDialog" aria-label="Sluiten">×</button></div>
+        <p class="dialog-copy">Exporteer je planning als bestand of maak een kopie in je klembord.</p>
+        <div class="share-actions">
+          <button type="button" class="secondary-button" id="exportButton">Exporteren</button>
+          <button type="button" class="primary-button" id="copyButton">Planning kopiëren</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="assistantDialog" aria-labelledby="assistantDialogTitle">
+      <form id="assistantForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Slimme planning</p>
+            <h2 id="assistantDialogTitle">AI studieplanner</h2>
+          </div>
+          <button type="button" class="close-button close-dialog" data-dialog="assistantDialog" aria-label="Sluiten">×</button>
+        </div>
+        <p class="dialog-copy">ToetsPlan plant korte leermomenten, maximaal 2 uur per dag, rond je schoolrooster en andere afspraken.</p>
+
+        <label>Beschrijf je toets
+          <textarea id="assistantPrompt" rows="4" required spellcheck="true" placeholder="Bijvoorbeeld: Mijn geschiedenistoets gaat over Napoleon en de Franse Revolutie op 24 november."></textarea>
+        </label>
+        <label>Vak
+          <select id="assistantSubject">
+            <option value="auto">Automatisch herkennen</option>
+          </select>
+        </label>
+        <label>Moeilijkheid
+          <select id="assistantDifficulty">
+            <option value="1">Makkelijk</option>
+            <option value="2" selected>Gemiddeld</option>
+            <option value="3">Moeilijk</option>
+            <option value="4">Heel moeilijk</option>
+          </select>
+        </label>
+        <label>Toetsdatum <input type="date" id="assistantDate" required /></label>
+
+        <div class="ai-preview" id="aiPreview"></div>
+        <div class="dialog-actions">
+          <button type="button" class="secondary-button cancel-dialog" data-dialog="assistantDialog">Annuleren</button>
+          <button type="submit" class="primary-button">Plan automatisch</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="onboardingDialog" aria-labelledby="onboardingTitle">
+      <div class="onboarding-shell">
+        <div class="onboarding-progress" aria-label="Voortgang">
+          <span class="onboarding-progress-bar" id="onboardingProgressBar"></span>
+        </div>
+
+        <section class="onboarding-step" data-onboarding-step="1">
+          <div class="onboarding-hero-icon">T</div>
+          <p class="eyebrow">Welkom bij ToetsPlan</p>
+          <h2 id="onboardingTitle">Jouw toetsen, slim gepland</h2>
+          <p class="onboarding-copy">Vul in enkele korte stappen je rooster in. Daarna kiest ToetsPlan automatisch haalbare leerblokken rond school en afspraken.</p>
+          <label>Hoe mogen we je noemen?
+            <input id="onboardingName" type="text" maxlength="40" autocomplete="name" placeholder="Bijvoorbeeld: Sam" />
+          </label>
+        </section>
+
+        <section class="onboarding-step" data-onboarding-step="2" hidden>
+          <p class="eyebrow">Stap 2 van 3</p>
+          <h2>Wanneer heb je school?</h2>
+          <p class="onboarding-copy">Selecteer je schooldagen en vul de tijden in 24-uursnotatie in.</p>
+          <div class="onboarding-school-list" id="onboardingSchoolList"></div>
+        </section>
+
+        <section class="onboarding-step" data-onboarding-step="3" hidden>
+          <p class="eyebrow">Stap 3 van 3</p>
+          <h2>Hoe laat sta je op en ga je slapen?</h2>
+          <p class="onboarding-copy">ToetsPlan plant leermomenten alleen wanneer je wakker bent en houdt rekening met school en afspraken.</p>
+          <div class="onboarding-study-window">
+            <label>Ik sta op om
+              <input id="onboardingStudyStart" type="time" value="07:00" step="60" />
+            </label>
+            <label>Ik ga slapen om
+              <input id="onboardingStudyEnd" type="time" value="22:00" step="60" />
+            </label>
+          </div>
+          <div class="study-approach-group">
+            <p class="study-approach-help"><strong>Leeraanpak</strong><br />AI plant per onderwerp twee leermomenten en één aparte herhaling.</p>
+          </div>
+          <div class="onboarding-success">
+            <span>✓</span>
+            <div><strong>Bijna klaar</strong><small>Klik op Start ToetsPlan om je rooster op te slaan.</small></div>
+          </div>
+        </section>
+
+        <div class="onboarding-actions">
+          <button type="button" class="secondary-button" id="onboardingBack" hidden>Terug</button>
+          <button type="button" class="primary-button" id="onboardingNext">Beginnen</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
